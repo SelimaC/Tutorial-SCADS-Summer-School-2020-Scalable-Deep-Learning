@@ -38,6 +38,7 @@ from scipy.sparse import coo_matrix
 from nn_functions import *
 from monitor import Monitor
 import datetime
+import time
 import json
 import os
 import sys
@@ -373,7 +374,9 @@ def load_fashion_mnist_data(no_training_samples, no_testing_samples):
 
 if __name__ == "__main__":
 
-    for i in [3, 4]:
+    sum_training_time = 0
+
+    for i in range(5):
         # load data
         no_training_samples = 5000   # max 60000 for Fashion MNIST
         no_testing_samples = 1000  # max 10000 for Fshion MNIST
@@ -395,12 +398,17 @@ if __name__ == "__main__":
         fixprob_mlp = FixProb_MLP((x_train.shape[1], no_hidden_neurons_layer, no_hidden_neurons_layer, no_hidden_neurons_layer, y_train.shape[1]),
                                   (Relu, Relu, Relu, Softmax), epsilon=epsilon)
 
+        start_time = time.time()
         # train FixProb-MLP
         fixprob_mlp.fit(x_train, y_train, x_test, y_test, loss=CrossEntropy, epochs=no_training_epochs, batch_size=batch_size, learning_rate=learning_rate,
                     momentum=momentum, weight_decay=weight_decay, dropoutrate=dropout_rate, testing=True,
                     save_filename="Pretrained_results/fixprob_mlp_"+str(no_training_samples)+"_training_samples_e"+str(epsilon)+"_rand"+str(i), monitor=True)
+        step_time = time.time() - start_time
+        print("\nTotal training time: ", step_time)
+        sum_training_time += step_time
 
         # test FixProb-MLP
-        accuracy, _ = fixprob_mlp.predict(x_test, y_test, batch_size=1)
+        accuracy, _ = fixprob_mlp.predict(x_test, y_test, batch_size=100)
 
         print("\nAccuracy of the last epoch on the testing data: ", accuracy)
+    print(f"Average trainign time over 5 runs is {sum_training_time / 5} seconds")

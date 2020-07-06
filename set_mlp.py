@@ -40,6 +40,7 @@ from nn_functions import *
 from monitor import Monitor
 import datetime
 import os
+import time
 import json
 import sys
 import numpy as np
@@ -538,7 +539,9 @@ def load_fashion_mnist_data(no_training_samples, no_testing_samples):
 
 if __name__ == "__main__":
 
-    for i in range(1):
+    sum_training_time = 0
+
+    for i in range(5):
 
         # load data
         no_training_samples = 5000  # max 60000 for Fashion MNIST
@@ -562,12 +565,18 @@ if __name__ == "__main__":
         set_mlp = SET_MLP((x_train.shape[1], no_hidden_neurons_layer, no_hidden_neurons_layer, no_hidden_neurons_layer, y_train.shape[1]),
                           (Relu, Relu, Relu, Softmax), epsilon=epsilon)
 
+        start_time = time.time()
         # train SET-MLP
         set_mlp.fit(x_train, y_train, x_test, y_test, loss=CrossEntropy, epochs=no_training_epochs, batch_size=batch_size, learning_rate=learning_rate,
                     momentum=momentum, weight_decay=weight_decay, zeta=zeta, dropoutrate=dropout_rate, testing=True,
                     save_filename="Pretrained_results/set_mlp_" + str(no_training_samples) + "_training_samples_e" + str(epsilon) + "_rand" + str(i), monitor=True)
 
+        step_time = time.time() - start_time
+        print("\nTotal training time: ", step_time)
+        sum_training_time += step_time
+
         # test SET-MLP
-        accuracy, _ = set_mlp.predict(x_test, y_test, batch_size=1)
+        accuracy, _ = set_mlp.predict(x_test, y_test, batch_size=100)
 
         print("\nAccuracy of the last epoch on the testing data: ", accuracy)
+    print(f"Average trainign time over 5 runs is {sum_training_time/5} seconds")
