@@ -269,7 +269,7 @@ class Dense_MLP:
 
             # save performance metrics values in a file
             if save_filename != "":
-                np.savetxt(save_filename, metrics)
+                np.savetxt(save_filename +".txt", metrics)
 
             if self.save_filename != "" and self.monitor:
                 with open(self.save_filename + "_monitor.json", 'w') as file:

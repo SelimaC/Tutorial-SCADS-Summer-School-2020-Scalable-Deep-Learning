@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 epsilon=13
-samples=2000
+samples=5000
 
 set_mlp=np.loadtxt("Pretrained_results/set_mlp_"+str(samples)+"_training_samples_e"+str(epsilon)+"_rand0.txt")
 fixprob_mlp=np.loadtxt("Pretrained_results/fixprob_mlp_"+str(samples)+"_training_samples_e"+str(epsilon)+"_rand0.txt")
-fc_mlp=np.loadtxt("Pretrained_results/fc_mlp_"+str(samples)+"_training_samples_rand0.txt")
+fc_mlp=np.loadtxt("Pretrained_results/dense_mlp_"+str(samples)+"_training_samples_rand0.txt")
 
 """
 for i in range(1,5):
@@ -52,6 +52,6 @@ ax2.set_xlabel("Epochs [#]")
 ax2.legend(loc=1,fontsize=8)
 
 
-plt.savefig("Pretrained_results/mnist_learning_curves_samples"+str(samples)+".pdf", bbox_inches='tight')
+plt.savefig("Results/fashionmnist_learning_curves_samples"+str(samples)+".pdf", bbox_inches='tight')
 
 plt.close()

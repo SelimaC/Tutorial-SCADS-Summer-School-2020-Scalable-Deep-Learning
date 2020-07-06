@@ -322,7 +322,7 @@ class FixProb_MLP:
 
             # save performance metrics values in a file
             if self.save_filename != "":
-                np.savetxt(self.save_filename+".txt", metrics)
+                np.savetxt(self.save_filename +".txt", metrics)
 
             if self.save_filename != "" and self.monitor:
                 with open(self.save_filename + "_monitor.json", 'w') as file:
