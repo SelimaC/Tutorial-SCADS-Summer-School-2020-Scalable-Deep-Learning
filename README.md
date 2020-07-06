@@ -2,7 +2,7 @@
 Code associated with SCADS Summer School 2020 tutorial  "Scalable Deep Learning Tutorial".
 * Tutorial details - https://www.scads.de/de/summerschool2020
 * The code is based on [Implementation 2](https://github.com/dcmocanu/sparse-evolutionary-artificial-neural-networks/tree/master/SET-MLP-Sparse-Python-Data-Structures) of SET-MLP to which Dropout is added.
-* In the "Pretrained_results" folder there is a nice animation "fashion_mnist_connections_evolution_per_input_pixel_rand0.gif" of the input layer connectivity evolution during training.    
+* In the "Results" folder there is a nice animation "fashion_mnist_connections_evolution_per_input_pixel_rand0.gif" of the input layer connectivity evolution during training.    
 * In the "optional_assignment" folder you can find the instructions for an additional hands-on experience.  For any question please feel free to contact me by email (s.curci@student.tue.nl). 
 
 
