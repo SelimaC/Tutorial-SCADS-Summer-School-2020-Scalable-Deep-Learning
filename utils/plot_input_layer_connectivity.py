@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation
-import matplotlib.colors as mcolors
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -15,8 +14,8 @@ def anim(n):
 
 
 for i in range(1):
-    data = np.load("data/fashion_mnist.npz")
-    connections=np.load("Pretrained_results/set_mlp_2000_training_samples_e13_rand"+str(i)+"_input_connections.npz")["inputLayerConnections"]
+    data = np.load("../data/fashion_mnist.npz")
+    connections=np.load("../Pretrained_results/set_mlp_5000_training_samples_e13_rand"+str(i)+"_input_connections.npz")["inputLayerConnections"]
 
     allConnections=np.zeros((28,28,len(connections)))
     for j in range(len(connections)):
@@ -24,7 +23,7 @@ for i in range(1):
         allConnections[:,:,j]=connectionsEpoch
 
     fig = plt.figure()
-    fig.suptitle('IJCAI 2019 tutorials\nScalable Deep Learning: from theory to practice', fontsize=14)
+    fig.suptitle('6th International (online) Summer school on AI and Big Data \nScalable Deep Learning Tutorial', fontsize=14)
 
     ax1 = fig.add_subplot(121)
     ax1.imshow(np.reshape(data["X_train"][1,:],(28,28)),vmin=0,vmax=255,cmap="gray_r",interpolation=None)
@@ -45,4 +44,4 @@ for i in range(1):
 
     # create the animation
     ani = matplotlib.animation.FuncAnimation(fig, anim, frames=len(connections))
-    ani.save("Pretrained_results/fashion_mnist_connections_evolution_per_input_pixel_rand"+str(i)+".gif", writer='imagemagick',fps=24,codec=None)
+    ani.save("../Results/fashion_mnist_connections_evolution_per_input_pixel_rand"+str(i)+".gif", writer='imagemagick',fps=24,codec=None)

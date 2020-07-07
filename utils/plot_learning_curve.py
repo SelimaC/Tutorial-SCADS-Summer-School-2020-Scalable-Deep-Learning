@@ -6,17 +6,17 @@ import numpy as np
 epsilon=13
 samples=5000
 
-set_mlp=np.loadtxt("Pretrained_results/set_mlp_"+str(samples)+"_training_samples_e"+str(epsilon)+"_rand0.txt")
-fixprob_mlp=np.loadtxt("Pretrained_results/fixprob_mlp_"+str(samples)+"_training_samples_e"+str(epsilon)+"_rand0.txt")
-fc_mlp=np.loadtxt("Pretrained_results/dense_mlp_"+str(samples)+"_training_samples_rand0.txt")
+set_mlp=np.loadtxt("../Pretrained_results/set_mlp_"+str(samples)+"_training_samples_e"+str(epsilon)+"_rand0.txt")
+fixprob_mlp=np.loadtxt("../Pretrained_results/fixprob_mlp_"+str(samples)+"_training_samples_e"+str(epsilon)+"_rand0.txt")
+fc_mlp=np.loadtxt("../Pretrained_results/dense_mlp_"+str(samples)+"_training_samples_rand0.txt")
 
 """
 for i in range(1,5):
     set_mlp = set_mlp + np.loadtxt(
-        "Results/set_mlp_" + str(samples) + "_training_samples_e" + str(epsilon) + "_rand" + str(i) + ".txt")
+        "../Results/set_mlp_" + str(samples) + "_training_samples_e" + str(epsilon) + "_rand" + str(i) + ".txt")
     fixprob_mlp = fixprob_mlp + np.loadtxt(
-        "Results/fixprob_mlp_" + str(samples) + "_training_samples_e" + str(epsilon) + "_rand" + str(i) + "")
-    fc_mlp = fc_mlp + np.loadtxt("Pretrained_results/fc_mlp_" + str(samples) + "_training_samples_rand" + str(i) + ".txt")
+        "../Results/fixprob_mlp_" + str(samples) + "_training_samples_e" + str(epsilon) + "_rand" + str(i) + "")
+    fc_mlp = fc_mlp + np.loadtxt("../Pretrained_results/fc_mlp_" + str(samples) + "_training_samples_rand" + str(i) + ".txt")
 
 set_mlp/=5
 fixprob_mlp/=5
@@ -52,6 +52,6 @@ ax2.set_xlabel("Epochs [#]")
 ax2.legend(loc=1,fontsize=8)
 
 
-plt.savefig("Results/fashionmnist_learning_curves_samples"+str(samples)+".pdf", bbox_inches='tight')
+plt.savefig("../Results/fashionmnist_learning_curves_samples"+str(samples)+".pdf", bbox_inches='tight')
 
 plt.close()

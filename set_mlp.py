@@ -37,7 +37,7 @@ from scipy.sparse import lil_matrix
 from scipy.sparse import coo_matrix
 from scipy.sparse import dok_matrix
 from nn_functions import *
-from monitor import Monitor
+from utils.monitor import Monitor
 import datetime
 import os
 import time

@@ -34,7 +34,7 @@
 #                                             https://github.com/ritchie46/vanilla-machine-learning/blob/master/vanilla_mlp.py
 
 from numba import njit
-from monitor import Monitor
+from utils.monitor import Monitor
 import datetime
 import json
 import time
