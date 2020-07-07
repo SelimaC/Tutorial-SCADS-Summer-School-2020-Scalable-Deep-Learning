@@ -540,8 +540,9 @@ def load_fashion_mnist_data(no_training_samples, no_testing_samples):
 if __name__ == "__main__":
 
     sum_training_time = 0
+    runs = 1
 
-    for i in range(5):
+    for i in range(runs):
 
         # load data
         no_training_samples = 5000  # max 60000 for Fashion MNIST
@@ -579,4 +580,4 @@ if __name__ == "__main__":
         accuracy, _ = set_mlp.predict(x_test, y_test, batch_size=100)
 
         print("\nAccuracy of the last epoch on the testing data: ", accuracy)
-    print(f"Average trainign time over 5 runs is {sum_training_time/5} seconds")
+    print(f"Average training time over {runs} runs is {sum_training_time/runs} seconds")
