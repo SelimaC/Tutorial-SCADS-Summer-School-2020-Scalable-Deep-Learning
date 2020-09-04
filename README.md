@@ -1,6 +1,7 @@
 # Tutorial-SCADS-Summer-School-2020-Scalable-Deep-Learning
-Code associated with 6th International (online) Summer school on AI and Big Data tutorial "Scalable Deep Learning Tutorial".
-* Tutorial details - https://www.scads.de/de/summerschool2020
+Code associated with 6th International (online) Summer school on AI and Big Data tutorial "Scalable Deep Learning Tutorial" and "Scalable deep learning: how far is one million neurons?" tutorial at ECAI 2020.
+* Tutorial details Summer School - https://www.scads.de/de/summerschool2020
+* Tutorial details ECAI 2020 - https://sites.google.com/view/ecai2020-one-billion-neurons
 * The code is based on [Implementation 2](https://github.com/dcmocanu/sparse-evolutionary-artificial-neural-networks/tree/master/SET-MLP-Sparse-Python-Data-Structures) of SET-MLP to which Dropout is added.
 * In the "Results" folder there is a nice animation "fashion_mnist_connections_evolution_per_input_pixel_rand0.gif" of the input layer connectivity evolution during training.    
 * In the "optional_assignment" folder you can find the instructions for an additional hands-on experience.  For any question please feel free to contact me by email (s.curci@student.tue.nl). 
