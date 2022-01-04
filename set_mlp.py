@@ -116,7 +116,7 @@ def array_intersect(a, b):
 
 
 class SET_MLP:
-    def __init__(self, dimensions, activations, epsilon=20):
+    def __init__(self, dimensions, activations, epsilon=20, load_model_path=''):
         """
         :param dimensions: (tpl/ list) Dimensions of the neural net. (input, hidden layer, output)
         :param activations: (tpl/ list) Activations functions.
@@ -157,9 +157,15 @@ class SET_MLP:
 
         # Activations are also initiated by index. For the example we will have activations[2] and activations[3]
         self.activations = {}
+
+        load_from_model = False
+        if load_model_path != '':
+            load_from_model = True
+            self.load_model(load_model_path)
         for i in range(len(dimensions) - 1):
-            self.w[i + 1] = create_sparse_weights(self.epsilon, dimensions[i], dimensions[i + 1])  # create sparse weight matrices
-            self.b[i + 1] = np.zeros(dimensions[i + 1], dtype='float32')
+            if not load_from_model:
+                self.w[i + 1] = create_sparse_weights(self.epsilon, dimensions[i], dimensions[i + 1])  # create sparse weight matrices
+                self.b[i + 1] = np.zeros(dimensions[i + 1], dtype='float32')
             self.activations[i + 2] = activations[i]
 
     def _feed_forward(self, x, drop=False):
@@ -514,4 +520,11 @@ class SET_MLP:
         return accuracy, activations
 
     def save_model(self, path):
+        print(f'Saving model at {path}')
         np.save(path, np.array([self.w, self.b]))
+
+    def load_model(self, path):
+        print(f'Loading model from {path}')
+        model = np.load(path, allow_pickle=True)
+        self.w = model[0]
+        self.b = model[1]

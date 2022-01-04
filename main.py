@@ -32,6 +32,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--no_training_samples", default="5000", type=int,
+                        help='max 60000 for Fshion MNIST')
+    parser.add_argument("--no_testing_samples", default="1000", type=int,
                         help='max 10000 for Fshion MNIST')
     parser.add_argument("--no_hidden_neurons_layer", default="1000", type=int)
     parser.add_argument("--epsilon", default="13", type=int,
@@ -64,6 +66,10 @@ if __name__ == "__main__":
                         help='where to save the model')
     parser.add_argument("--model_name", default="SET_F_MNIST", type=str,
                         help='name to be used for saving')
+    parser.add_argument("--load_model_path", default='', type=str,
+                        help='Loads model from location if not empty')
+
+    parser.add_argument("--skip_training", default=False, type=bool)
 
     args = parser.parse_args()
 
@@ -81,38 +87,39 @@ if __name__ == "__main__":
              args.no_hidden_neurons_layer,
              args.no_hidden_neurons_layer,
              y_train.shape[1]), (
-            Relu, Relu, Relu, Softmax), epsilon=args.epsilon)
+            Relu, Relu, Relu, Softmax), 
+            epsilon=args.epsilon, 
+            load_model_path=args.load_model_path)
 
         start_time = time.time()
+        if not args.skip_training:
+            set_mlp.fit(
+                x_train,
+                y_train,
+                x_test,
+                y_test,
+                loss=CrossEntropy,
+                epochs=args.no_training_epochs,
+                batch_size=args.train_batch_size,
+                learning_rate=args.learning_rate,
+                momentum=args.momentum,
+                weight_decay=args.weight_decay,
+                zeta=args.zeta,
+                dropoutrate=args.dropout_rate,
+                testing=args.testing,
+                save_filename=f'''{args.save_file_path}/set_mlp_
+                    {args.no_training_samples}_training_samples_e
+                    {args.epsilon}_rand{i}''', monitor=args.monitor)
 
-        set_mlp.fit(
-            x_train,
-            y_train,
-            x_test,
-            y_test,
-            loss=CrossEntropy,
-            epochs=args.no_training_epochs,
-            batch_size=args.train_batch_size,
-            learning_rate=args.learning_rate,
-            momentum=args.momentum,
-            weight_decay=args.weight_decay,
-            zeta=args.zeta,
-            dropoutrate=args.dropout_rate,
-            testing=args.testing,
-            save_filename=f'''{args.save_file_path}/set_mlp_
-                {args.no_training_samples}_training_samples_e
-                {args.epsilon}_rand{i}''', monitor=args.monitor)
+            step_time = time.time() - start_time
+            print("\nTotal training time: ", step_time)
+            sum_training_time += step_time
 
-        step_time = time.time() - start_time
-        print("\nTotal training time: ", step_time)
-        sum_training_time += step_time
-
-        # save model
-        if args.save_model:
-            save_loc = f'''{args.save_model_loc}/
-                {args.model_name}_{time.time()}'''
-            print(f'Saving model at {save_loc}')
-            set_mlp.save_model(save_loc)
+            # save model
+            if args.save_model:
+                save_loc = f'''{args.save_model_loc}/
+                    {args.model_name}_{time.time()}'''
+                set_mlp.save_model(save_loc)
 
         # test SET-MLP
         accuracy, _ = set_mlp.predict(x_test, y_test,
