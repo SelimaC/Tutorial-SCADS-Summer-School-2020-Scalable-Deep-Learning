@@ -117,8 +117,7 @@ if __name__ == "__main__":
 
             # save model
             if args.save_model:
-                save_loc = f'''{args.save_model_loc}/
-                    {args.model_name}_{time.time()}'''
+                save_loc = f'''{args.save_model_loc}/{args.model_name}_{time.time()}'''
                 set_mlp.save_model(save_loc)
 
         # test SET-MLP
