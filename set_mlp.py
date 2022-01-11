@@ -116,7 +116,7 @@ def array_intersect(a, b):
 
 
 class SET_MLP:
-    def __init__(self, dimensions, activations, epsilon=20):
+    def __init__(self, dimensions, activations, epsilon=20, load_model_path=''):
         """
         :param dimensions: (tpl/ list) Dimensions of the neural net. (input, hidden layer, output)
         :param activations: (tpl/ list) Activations functions.
@@ -157,9 +157,15 @@ class SET_MLP:
 
         # Activations are also initiated by index. For the example we will have activations[2] and activations[3]
         self.activations = {}
+
+        load_from_model = False
+        if load_model_path != '':
+            load_from_model = True
+            self.load_model(load_model_path)
         for i in range(len(dimensions) - 1):
-            self.w[i + 1] = create_sparse_weights(self.epsilon, dimensions[i], dimensions[i + 1])  # create sparse weight matrices
-            self.b[i + 1] = np.zeros(dimensions[i + 1], dtype='float32')
+            if not load_from_model:
+                self.w[i + 1] = create_sparse_weights(self.epsilon, dimensions[i], dimensions[i + 1])  # create sparse weight matrices
+                self.b[i + 1] = np.zeros(dimensions[i + 1], dtype='float32')
             self.activations[i + 2] = activations[i]
 
     def _feed_forward(self, x, drop=False):
@@ -513,71 +519,12 @@ class SET_MLP:
         accuracy = compute_accuracy(activations, y_test)
         return accuracy, activations
 
+    def save_model(self, path):
+        print(f'Saving model at {path}')
+        np.save(path, np.array([self.w, self.b]))
 
-def load_fashion_mnist_data(no_training_samples, no_testing_samples):
-    np.random.seed(0)
-
-    data = np.load("data/fashion_mnist.npz")
-
-    index_train = np.arange(data["X_train"].shape[0])
-    np.random.shuffle(index_train)
-
-    index_test = np.arange(data["X_test"].shape[0])
-    np.random.shuffle(index_test)
-
-    x_train = data["X_train"][index_train[0:no_training_samples], :]
-    y_train = data["Y_train"][index_train[0:no_training_samples], :]
-    x_test = data["X_test"][index_test[0:no_testing_samples], :]
-    y_test = data["Y_test"][index_test[0:no_testing_samples], :]
-
-    # normalize in 0..1
-    x_train = x_train.astype('float64') / 255.
-    x_test = x_test.astype('float64') / 255.
-
-    return x_train, y_train, x_test, y_test
-
-
-if __name__ == "__main__":
-
-    sum_training_time = 0
-    runs = 1
-
-    for i in range(runs):
-
-        # load data
-        no_training_samples = 5000  # max 60000 for Fashion MNIST
-        no_testing_samples = 1000  # max 10000 for Fshion MNIST
-        x_train, y_train, x_test, y_test = load_fashion_mnist_data(no_training_samples, no_testing_samples)
-
-        # set model parameters
-        no_hidden_neurons_layer = 1000
-        epsilon = 13  # set the sparsity level
-        zeta = 0.3  # in [0..1]. It gives the percentage of unimportant connections which are removed and replaced with random ones after every epoch
-        no_training_epochs = 400
-        batch_size = 40
-        dropout_rate = 0.2
-        learning_rate = 0.05
-        momentum = 0.9
-        weight_decay = 0.0002
-
-        np.random.seed(i)
-
-        # create SET-MLP (MLP with adaptive sparse connectivity trained with Sparse Evolutionary Training)
-        set_mlp = SET_MLP((x_train.shape[1], no_hidden_neurons_layer, no_hidden_neurons_layer, no_hidden_neurons_layer, y_train.shape[1]),
-                          (Relu, Relu, Relu, Softmax), epsilon=epsilon)
-
-        start_time = time.time()
-        # train SET-MLP
-        set_mlp.fit(x_train, y_train, x_test, y_test, loss=CrossEntropy, epochs=no_training_epochs, batch_size=batch_size, learning_rate=learning_rate,
-                    momentum=momentum, weight_decay=weight_decay, zeta=zeta, dropoutrate=dropout_rate, testing=True,
-                    save_filename="Pretrained_results/set_mlp_" + str(no_training_samples) + "_training_samples_e" + str(epsilon) + "_rand" + str(i), monitor=True)
-
-        step_time = time.time() - start_time
-        print("\nTotal training time: ", step_time)
-        sum_training_time += step_time
-
-        # test SET-MLP
-        accuracy, _ = set_mlp.predict(x_test, y_test, batch_size=100)
-
-        print("\nAccuracy of the last epoch on the testing data: ", accuracy)
-    print(f"Average training time over {runs} runs is {sum_training_time/runs} seconds")
+    def load_model(self, path):
+        print(f'Loading model from {path}')
+        model = np.load(path, allow_pickle=True)
+        self.w = model[0]
+        self.b = model[1]
